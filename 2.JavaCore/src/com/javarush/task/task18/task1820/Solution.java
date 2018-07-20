@@ -25,6 +25,7 @@ package com.javarush.task.task18.task1820;
 */
 
 import java.io.*;
+import java.util.ArrayList;
 
 public class Solution
 {
@@ -32,27 +33,35 @@ public class Solution
     {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         FileInputStream fis = new FileInputStream(br.readLine());
-        FileWriter fw = new FileWriter(br.readLine());
-        String curNumber = "";
-        do
+        FileOutputStream fos = new FileOutputStream(br.readLine());
+
+        // Считываем данные
+        byte[] buf = new byte[fis.available()];
+        if(fis.available() > 0)
+            fis.read(buf);
+        fis.close();
+
+        // Переделка в список
+        ArrayList<Double> list = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        for(byte b : buf)
         {
-            byte b;
-            b = (byte)fis.read();
-            if(b == ' ' || fis.available() == 0)
-            {
-                Double d = Double.parseDouble(curNumber);
-                curNumber = String.format("%.0f ",d);
-                fw.write(curNumber);
-                curNumber = "";
-            }
+            if (b != (byte)' ')
+                sb.append((char)b);
             else
             {
-                curNumber += (char)b;
+                list.add(Double.parseDouble(sb.toString()));
+                sb = new StringBuilder();
             }
         }
-        while(fis.available() > 0);
+        list.add(Double.parseDouble(sb.toString()));
 
-        fis.close();
-        fw.close();
+        for (Double d : list)
+        {
+            Integer i = (int) Math.round(d);
+            fos.write((i.toString() + " ").getBytes());
+        }
+
+        fos.close();
     }
 }
