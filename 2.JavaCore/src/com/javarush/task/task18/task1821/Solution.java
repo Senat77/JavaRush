@@ -28,10 +28,42 @@ f 361
 5. Поток для чтения из файла должен быть закрыт.
 */
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Map;
+import java.util.TreeMap;
+
 public class Solution
 {
-    public static void main(String[] args)
+    public static void main(String[] args) throws IOException
     {
+        //args = new String[1];
+        //args[0] = "d:/temp/1.txt";
+        if (args.length != 1) return;
 
+        FileInputStream fis = new FileInputStream(args[0]);
+        byte[] arr = new byte[fis.available()];
+        if(fis.available() > 0)
+            fis.read(arr);
+        fis.close();
+
+        TreeMap<Character,Integer> map = new TreeMap<>();
+        for (int i = 0; i < arr.length; i++)
+        {
+            Character ch = Character.valueOf((char)arr[i]);
+            if(map.containsKey(ch))
+            {
+                map.replace(ch,map.get(ch)+1);
+            }
+            else
+            {
+                map.put(ch,1);
+            }
+        }
+        //Collections.sort(map,);
+        for (Map.Entry<Character,Integer> e : map.entrySet())
+        {
+            System.out.print(e.getKey() + " " + e.getValue().toString() + "\n");
+        }
     }
 }
