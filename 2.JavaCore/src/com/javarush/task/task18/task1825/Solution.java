@@ -5,9 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Comparator;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /* 
 Собираем файл
@@ -38,9 +36,42 @@ import java.util.TreeSet;
 
 public class Solution
 {
-    public static void main(String[] args)
+    public static void main(String[] args) throws IOException
     {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        TreeMap<Integer,String> tm = new TreeMap<>();
+        String resFile = "";
 
+        while (true)
+        {
+            String s = br.readLine();
+            if ("end".equals(s)) break;
+            if (resFile.equals(""))
+            {
+                resFile = s.substring(0, s.lastIndexOf(".part"));
+                //System.out.println(resFile);
+            }
+            int number = Integer.parseInt(s.substring(s.lastIndexOf(".part")+5,s.length()));
+            //System.out.println(number);
+            tm.put(number,s);
+        }
+
+        // Набор имен есть, собираем в единый файл
+        FileOutputStream fos = new FileOutputStream(resFile);
+        for(Map.Entry<Integer,String> e : tm.entrySet())
+        {
+            FileInputStream fis = new FileInputStream(e.getValue());
+            byte[] arr = new byte[fis.available()];
+            if(fis.available() > 0)
+            {
+                fis.read(arr);
+                fos.write(arr);
+            }
+            fis.close();
+        }
+
+        fos.close();
+        br.close();
     }
 }
 
