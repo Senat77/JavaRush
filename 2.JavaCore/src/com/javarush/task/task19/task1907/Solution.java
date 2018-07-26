@@ -20,6 +20,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Solution
 {
@@ -35,12 +37,9 @@ public class Solution
             s = s + (char)fr.read();
 
         //System.out.println(s);
-        while(true)
-        {
-            if (!s.contains("world")) break;
-            count++;
-            s = s.substring(s.indexOf("world")+5,s.length());
-        }
+        Pattern p = Pattern.compile("\\bworld\\b");
+        Matcher m = p.matcher(s);
+        while(m.find()) count++;
 
         fr.close();
         System.out.println(count);
