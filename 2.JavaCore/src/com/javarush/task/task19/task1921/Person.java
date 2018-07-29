@@ -2,11 +2,13 @@ package com.javarush.task.task19.task1921;
 
 import java.util.Date;
 
-public class Person {
+public class Person
+{
     private String name;
     private Date birthday;
 
-    public Person(String name, Date birthday) {
+    public Person(String name, Date birthday)
+    {
         this.name = name;
         this.birthday = birthday;
     }
