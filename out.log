@@ -16637,3 +16637,5 @@ com.intellij.openapi.util.TraceableDisposable.ObjectNotDisposedException: See st
 2018-08-03 15:47:03 INFO  ApacheHttpClient.refreshUserInfo(294) - Информация о пользователе получена.
 2018-08-03 15:47:03 INFO  ApacheHttpClient.startGA(31) - GAService запущен.
 2018-08-03 15:47:03 INFO  AbstractRestApiClient.startService(70) - EventsService запущен.
+2018-08-03 15:47:30 INFO  JavaRushTasksProjectComponent.projectClosing(165) - ---------- Project JavaRushTasks closed ----------
+
