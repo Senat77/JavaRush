@@ -21371,3 +21371,36 @@ java.lang.NullPointerException
 2018-08-17 16:27:02 INFO  ApacheHttpClient.getTask(422) - responseCode = 200
 2018-08-17 16:27:02 INFO  ApacheHttpClient.getTask(422) - responseCode = 200
 2018-08-17 16:27:02 INFO  ApacheHttpClient.getTask(422) - responseCode = 200
+2018-08-19 14:11:52 INFO  JavaRushTasksProjectComponent.projectOpened(68) - ---------- Project JavaRushTasks opened ----------
+2018-08-19 14:11:52 INFO  JavaRushTasksProjectComponent.projectOpened(69) - ---------- Version 3.20 ----------
+
+2018-08-19 14:11:52 INFO  ApacheHttpClient.createAsyncHttpClient(129) - Выбрано 1 прокси. Тип : DIRECT
+2018-08-19 14:11:53 INFO  ApacheHttpClient.<init>(87) - ApacheHttpClient проинстанциирован успешно.
+2018-08-19 14:11:53 INFO  ApacheHttpClient.testConnection(187) - responseCode = 200
+2018-08-19 14:11:53 INFO  ApacheHttpClient.testConnection(195) - result = true
+2018-08-19 14:11:54 INFO  ApacheHttpClient.login(225) - Ожидание ответа сервера.
+2018-08-19 14:11:54 INFO  ApacheHttpClient.login(225) - Ожидание ответа сервера.
+2018-08-19 14:11:54 INFO  ApacheHttpClient.login(229) - responseCode = 200
+2018-08-19 14:11:54 INFO  ApacheHttpClient.login(260) - JSESSIONID OK
+2018-08-19 14:11:54 INFO  ApacheHttpClient.refreshUserInfo(288) - responseCode = 200
+2018-08-19 14:11:55 INFO  ApacheHttpClient.refreshUserInfo(294) - Информация о пользователе получена.
+2018-08-19 14:11:55 INFO  ApacheHttpClient.startGA(31) - GAService запущен.
+2018-08-19 14:11:55 INFO  AbstractRestApiClient.startService(70) - EventsService запущен.
+2018-08-19 14:14:14 INFO  ApacheHttpClient.getWebResourceAsStream(434) - responseCode = 200
+2018-08-19 14:14:47 INFO  ApacheHttpClient.getWebResourceAsStream(434) - responseCode = 200
+2018-08-19 14:15:31 INFO  JavaRushTasksProjectComponent.projectClosing(165) - ---------- Project JavaRushTasks closed ----------
+
+2018-08-19 14:15:59 INFO  JavaRushTasksProjectComponent.projectOpened(68) - ---------- Project JavaRushTasks opened ----------
+2018-08-19 14:15:59 INFO  JavaRushTasksProjectComponent.projectOpened(69) - ---------- Version 3.21 ----------
+
+2018-08-19 14:15:59 INFO  ApacheHttpClient.createAsyncHttpClient(129) - Выбрано 1 прокси. Тип : DIRECT
+2018-08-19 14:16:00 INFO  ApacheHttpClient.<init>(87) - ApacheHttpClient проинстанциирован успешно.
+2018-08-19 14:16:01 INFO  ApacheHttpClient.testConnection(187) - responseCode = 200
+2018-08-19 14:16:01 INFO  ApacheHttpClient.testConnection(198) - result = true
+2018-08-19 14:16:01 INFO  ApacheHttpClient.login(228) - Ожидание ответа сервера.
+2018-08-19 14:16:01 INFO  ApacheHttpClient.login(232) - responseCode = 200
+2018-08-19 14:16:01 INFO  ApacheHttpClient.login(263) - JSESSIONID OK
+2018-08-19 14:16:01 INFO  ApacheHttpClient.refreshUserInfo(291) - responseCode = 200
+2018-08-19 14:16:01 INFO  ApacheHttpClient.refreshUserInfo(297) - Информация о пользователе получена.
+2018-08-19 14:16:01 INFO  ApacheHttpClient.startGA(31) - GAService запущен.
+2018-08-19 14:16:01 INFO  AbstractRestApiClient.startService(70) - EventsService запущен.

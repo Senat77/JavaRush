@@ -39,8 +39,20 @@ public class FakeModel extends UserServiceImpl implements Model
     }
 
     @Override
+    public void deleteUserById(long id)
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public ModelData getModelData()
     {
         return modelData;
+    }
+
+    @Override
+    public void changeUserData(String name, long id, int level)
+    {
+        throw new UnsupportedOperationException();
     }
 }

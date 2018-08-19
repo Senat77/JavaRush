@@ -54,10 +54,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> filterOnlyActiveUsers(List<User> allUsers) {
+    public List<User> filterOnlyActiveUsers(List<User> allUsers)
+    {
         //will not change allUsers list, create new one instead of that
         List<User> result = new ArrayList<>();
-        for (User user : allUsers) {
+        for (User user : allUsers)
+        {
             if (User.NULL_USER != user && !Util.isUserDeleted(user)) {
                 result.add(user);
             }
@@ -69,5 +71,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUsersById(long userId) {
         return userDao.getUsersById(userId);
+    }
+
+    @Override
+    public void changeUserData(String name, long id, int level)
+    {
+        createOrUpdateUser(name,id,level);
     }
 }

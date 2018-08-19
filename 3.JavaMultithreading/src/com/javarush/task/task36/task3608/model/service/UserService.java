@@ -18,4 +18,6 @@ public interface UserService {
     List<User> filterOnlyActiveUsers(List<User> allUsers);
 
     User getUsersById(long userId);
+
+    void changeUserData(String name, long id, int level);
 }
