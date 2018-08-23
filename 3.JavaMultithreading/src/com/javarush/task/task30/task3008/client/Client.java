@@ -6,6 +6,7 @@ import com.javarush.task.task30.task3008.Message;
 import com.javarush.task.task30.task3008.MessageType;
 
 import java.io.IOException;
+import java.net.Socket;
 
 public class Client
 {
@@ -94,10 +95,86 @@ public class Client
 
     public class SocketThread extends Thread
     {
+        protected void processIncomingMessage(String message)
+        {
+            ConsoleHelper.writeMessage(message);
+        }
+
+        protected void informAboutAddingNewUser(String userName)
+        {
+            ConsoleHelper.writeMessage(userName + " присоединился к чату");
+        }
+
+        protected void informAboutDeletingNewUser(String userName)
+        {
+            ConsoleHelper.writeMessage(userName + " покинул чат");
+        }
+
+        protected void notifyConnectionStatusChanged(boolean clientConnected)
+        {
+            Client.this.clientConnected = clientConnected;
+            synchronized (Client.this)
+            {
+                Client.this.notify();
+            }
+        }
+
+        protected void clientHandshake() throws IOException, ClassNotFoundException
+        {
+            while(true)
+            {
+                Message mes = connection.receive();
+                if(mes.getType() == MessageType.NAME_REQUEST)
+                {
+                    connection.send(new Message(MessageType.USER_NAME,getUserName()));
+                }
+                else
+                if(mes.getType() == MessageType.NAME_ACCEPTED)
+                {
+                    notifyConnectionStatusChanged(true);
+                    return;
+                }
+                else
+                    throw new IOException("Unexpected MessageType");
+            }
+        }
+
+        protected void clientMainLoop() throws IOException, ClassNotFoundException
+        {
+            while(true)
+            {
+                Message mes = connection.receive();
+                if (mes.getType() == MessageType.TEXT)
+                {
+                    processIncomingMessage(mes.getData());
+                } else if (mes.getType() == MessageType.USER_ADDED)
+                {
+                    informAboutAddingNewUser(mes.getData());
+                } else if (mes.getType() == MessageType.USER_REMOVED)
+                {
+                    informAboutDeletingNewUser(mes.getData());
+                } else
+                {
+                    throw new IOException("Unexpected MessageType");
+                }
+            }
+        }
+
         @Override
         public void run()
         {
-
+            try
+            {
+                Socket socket = new Socket(getServerAddress(),getServerPort());
+                connection = new Connection(socket);
+                clientHandshake();
+                clientMainLoop();
+            }
+            catch (ClassNotFoundException | IOException e)
+            {
+                e.printStackTrace();
+                notifyConnectionStatusChanged(false);
+            }
         }
     }
 
