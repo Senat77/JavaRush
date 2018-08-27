@@ -69,6 +69,23 @@ public class View extends JFrame implements ActionListener
         this.getContentPane().add(tabbedPane,BorderLayout.CENTER);
     }
 
+    public void selectHtmlTab()
+    {
+        tabbedPane.setSelectedIndex(0);
+        resetUndo();
+    }
+
+    public void update()
+    {
+        htmlTextPane.setDocument(controller.getDocument());
+    }
+
+    public void showAbout()
+    {
+        JOptionPane.showMessageDialog(this,"О программе","О программе",
+                                        JOptionPane.INFORMATION_MESSAGE);
+    }
+
     public boolean canUndo()
     {
         return undoManager.canUndo();
@@ -130,7 +147,15 @@ public class View extends JFrame implements ActionListener
 
     public void selectedTabChanged()
     {
-
+        if(tabbedPane.getSelectedIndex() == 0)
+        {
+            controller.setPlainText(plainTextPane.getText());
+        }
+        else
+        {
+            plainTextPane.setText(controller.getPlainText());
+        }
+        resetUndo();
     }
 
     public void exit()
@@ -151,6 +176,38 @@ public class View extends JFrame implements ActionListener
     @Override
     public void actionPerformed(ActionEvent e)
     {
-
+        String command = e.getActionCommand();
+        switch (command)
+        {
+            case "Новый" :
+            {
+                controller.createNewDocument();
+                break;
+            }
+            case "Открыть" :
+            {
+                controller.openDocument();
+                break;
+            }
+            case "Сохранить" :
+            {
+                controller.saveDocument();
+                break;
+            }
+            case "Сохранить как..." :
+            {
+                controller.saveDocumentAs();
+                break;
+            }
+            case "Выход" :
+            {
+                controller.exit();
+            }
+            case "О программе" :
+            {
+                showAbout();
+                break;
+            }
+        }
     }
 }
