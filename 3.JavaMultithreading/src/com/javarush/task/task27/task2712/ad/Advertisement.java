@@ -36,6 +36,11 @@ public class Advertisement
         return duration;
     }
 
+    public int getHits()
+    {
+        return hits;
+    }
+
     public long getAmountPerOneDisplaying()
     {
         return amountPerOneDisplaying;
