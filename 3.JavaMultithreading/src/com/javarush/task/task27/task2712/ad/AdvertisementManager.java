@@ -1,6 +1,8 @@
 package com.javarush.task.task27.task2712.ad;
 
 import com.javarush.task.task27.task2712.ConsoleHelper;
+import com.javarush.task.task27.task2712.statistic.StatisticManager;
+import com.javarush.task.task27.task2712.statistic.event.VideoSelectedEventDataRow;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,11 +11,11 @@ import java.util.List;
 
 public class AdvertisementManager
 {
-    private final AdvertisementStorage storage;// = AdvertisementStorage.getInstance();
+    private final AdvertisementStorage storage;
     private int timeSeconds;
 
     // Список перестановок
-    ArrayList<ArrayList<Advertisement>> bigList = new ArrayList<>();
+    private ArrayList<List<Advertisement>> bigList = new ArrayList<List<Advertisement>>();
 
     public AdvertisementManager(int timeSeconds)
     {
@@ -21,7 +23,7 @@ public class AdvertisementManager
         this.timeSeconds = timeSeconds;
     }
 
-    private long getAmountOfList(List<Advertisement> list)
+    private static long getAmountOfList(List<Advertisement> list)
     {
         long res = 0;
         for(Advertisement a : list)
@@ -29,7 +31,7 @@ public class AdvertisementManager
         return res;
     }
 
-    private int getDurationOfList(List<Advertisement> list)
+    private static int getDurationOfList(List<Advertisement> list)
     {
         int res = 0;
         for(Advertisement a : list)
@@ -37,64 +39,122 @@ public class AdvertisementManager
         return res;
     }
 
-    private static ArrayList<ArrayList<Advertisement>> permutate(ArrayList<Advertisement> list)
+    private void permutate(ArrayList<Advertisement> list)
     {
-        ArrayList<ArrayList<Advertisement>> result = new ArrayList<ArrayList<Advertisement>>();
-
-        result.add(new ArrayList<Advertisement>());
-        for (int i = 0; i < list.size(); i++)
+        // Очищаем статический массив комбинаций
+        bigList = new ArrayList<List<Advertisement>>();
+        for (int i = 1; i < (int)(Math.pow(2,list.size())); i++)
         {
-            ArrayList<ArrayList<Advertisement>> current = new ArrayList<ArrayList<Advertisement>>();
-            for (ArrayList<Advertisement> l : result)
+            // Текущая выборка
+            List<Advertisement> curList = new ArrayList<>();
+
+            // Строка - битовое поле, задающее номера элементов в списке элементов для текущей выборки
+            // Для удобства переворачиваем ее
+            String binaryField = Integer.toBinaryString(i).toString();
+            while(binaryField.length() < list.size())
+                binaryField = "0" + binaryField;
+            binaryField = new StringBuffer(binaryField).reverse().toString();
+            // Проходим строку от начала до конца
+            // Индекс '1' - индикатор добавления элемента list.get(j) в тек. выборку
+            for (int j = 0; j < binaryField.length(); j++)
             {
-                for (int j = 0; j < l.size()+1; j++)
+                if(binaryField.charAt(j) == '1')
                 {
-                    l.add(j, list.get(i));
-                    ArrayList<Advertisement> temp = new ArrayList<Advertisement>(l);
-                    current.add(temp);
-                    l.remove(j);
+                    // Добавляем текущий элемент в тек. выборку
+                    curList.add(list.get(j));
                 }
             }
-            result = new ArrayList<ArrayList<Advertisement>>(current);
+            // Тек. выборку собрали , перед добавлением в общий список проверим ,
+            // не привышает ли она длительность заказа. Если превышает, то она нам не нужна
+            if(getDurationOfList(curList) <= timeSeconds)
+                bigList.add(curList);
         }
-        return result;
     }
 
     public void processVideos()
     {
         if(storage.list().isEmpty())
             throw new NoVideoAvailableException();
-        /* Сортируем
-        Comparator<Advertisement> comparator = new Comparator<Advertisement>()
-        {
-            @Override
-            public int compare(Advertisement o1, Advertisement o2)
-            {
-                if(o1.getAmountPerOneDisplaying() > o2.getAmountPerOneDisplaying())
-                    return (-1);
-                if(o1.getAmountPerOneDisplaying() < o2.getAmountPerOneDisplaying())
-                    return 1;
-                Double d1 = o1.getAmountPerOneDisplaying() / new Double(o1.getDuration());
-                Double d2 = o2.getAmountPerOneDisplaying() / new Double(o2.getDuration());
-                return d1.compareTo(d2);
-            }
-        };
-        Collections.sort(storage.list(),comparator);
-        ConsoleHelper.writeMessage(storage.list().toString());
-        */
 
-        // Список подходящих подлительности и кол-ву показов роликов
+        // Список подходящих по длительности и кол-ву показов роликов
         List<Advertisement> sourceList = new ArrayList<>();
         for(Advertisement a : storage.list())
         {
             if(a.getDuration() <= timeSeconds && a.getHits() > 0)
                 sourceList.add(a);
         }
-        System.out.println("sourceList:" + sourceList.size());
         if(sourceList.isEmpty())
             throw new NoVideoAvailableException();
 
-        bigList = permutate((ArrayList<Advertisement>) sourceList);
-        System.out.println("BigList:" + bigList.size());
+        // Получаем все возможные выборки (кроме пустой) с учетом общего времени (неподходящие не добавляем)
+        permutate((ArrayList<Advertisement>) sourceList);
+
+        // Еще одна проверка на существование подходящих списков роликов
+        if(bigList.isEmpty())
+            throw new NoVideoAvailableException();
+
+        // Сортируем полученный список по "дороговизне" (по длительности, по кол-ву роликов) по убыванию
+        Collections.sort(bigList, new Comparator<List<Advertisement>>()
+        {
+            @Override
+            public int compare(List<Advertisement> o1, List<Advertisement> o2)
+            {
+                // По стоимости списков
+                if(getAmountOfList(o1) > getAmountOfList(o2))
+                    return(-1);
+                if(getAmountOfList(o1) < getAmountOfList(o2))
+                    return (1);
+
+                // По суммарной длительности
+                if(getDurationOfList(o1) > getDurationOfList(o2))
+                    return (-1);
+                if(getDurationOfList(o1) < getDurationOfList(o2))
+                    return (1);
+
+                // По кол-ву роликов в списке
+                if(Integer.compare(o1.size(),o2.size()) == 1)
+                    return (1);
+                if(Integer.compare(o1.size(),o2.size()) == -1)
+                    return (-1);
+
+                return (0);
+            }
+        });
+
+        // Первый элемент из отсортированного списка - нужный нам, досортировываем
+        Collections.sort(bigList.get(0), new Comparator<Advertisement>()
+        {
+            @Override
+            public int compare(Advertisement o1, Advertisement o2)
+            {
+                // По стоимости показа
+                if(o1.getAmountPerOneDisplaying() > o2.getAmountPerOneDisplaying())
+                    return (-1);
+                if(o1.getAmountPerOneDisplaying() < o2.getAmountPerOneDisplaying())
+                    return (1);
+                
+                // По стоимости секунды
+                if(Long.compare(o1.getAmountPerSecond(),o2.getAmountPerSecond()) == 1)
+                    return (1);
+                if(Long.compare(o1.getAmountPerSecond(),o2.getAmountPerSecond()) == -1)
+                    return (-1);
+
+                return (0);
+            }
+        });
+
+        // Регистратор событий
+        List<Advertisement> advertisement = bigList.get(0);
+        StatisticManager.getInstance().register(new VideoSelectedEventDataRow(advertisement,
+                getAmountOfList(advertisement),
+                getDurationOfList(advertisement)));
+
+        // Выводим на экран
+        for (Advertisement a : advertisement)
+        {
+            // First Video is displaying... 50, 277
+            ConsoleHelper.writeMessage(a.getName() + " is displaying... " + a.getAmountPerOneDisplaying() + ", " + a.getAmountPerSecond());
+            a.revalidate();
+        }
     }
 }

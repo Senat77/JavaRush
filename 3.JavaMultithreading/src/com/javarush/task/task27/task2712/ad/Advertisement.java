@@ -24,6 +24,13 @@ public class Advertisement
         if(hits <= 0)
             throw new UnsupportedOperationException();
         hits--;
+
+    }
+
+    public long getAmountPerSecond()
+    {
+        // Те самые тысячные доли копейки за секунду
+        return amountPerOneDisplaying*1000/duration;
     }
 
     public String getName()
