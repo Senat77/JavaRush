@@ -1,11 +1,11 @@
 package com.javarush.task.task27.task2712.statistic;
 
 import com.javarush.task.task27.task2712.kitchen.Cook;
+import com.javarush.task.task27.task2712.statistic.event.CookedOrderEventDataRow;
 import com.javarush.task.task27.task2712.statistic.event.EventDataRow;
 import com.javarush.task.task27.task2712.statistic.event.EventType;
 import com.javarush.task.task27.task2712.statistic.event.VideoSelectedEventDataRow;
 
-import java.time.LocalDate;
 import java.util.*;
 
 public class StatisticManager
@@ -47,6 +47,42 @@ public class StatisticManager
         return res;
     }
 
+    // Данные по загрузке повара
+    public Map<Date,Map<String,Integer>> getCookWorktime()
+    {
+        Map<Date,Map<String,Integer>> res = new TreeMap<>(Collections.reverseOrder());
+
+        for(EventDataRow data : statisticStorage.get(EventType.COOKED_ORDER))
+        {
+            CookedOrderEventDataRow cookData = (CookedOrderEventDataRow) data;
+            // Дата записи
+            Date shortDate = getLocalDate(cookData.getDate());
+            // Данные о тек. записи (повар и его время)
+            String cookName = cookData.getCookName();
+            int curTime = cookData.getTime();
+            Map<String,Integer> curDate;
+
+            // Ищем запись о дате в мапе :
+            if(!res.containsKey(shortDate))
+            {
+                // Записей в результате о текущей дате нет, добавляем
+                curDate = new TreeMap<>();
+                res.put(shortDate,curDate);
+            }
+            else
+            {
+                // Получим текущую сабмапу для этой даты :
+                curDate = res.get(shortDate);
+            }
+            // Ищем нужного нам повара и заполняем (или добавляем) данные
+            int temp = curDate.containsKey(cookName) ? curDate.get(cookName) + curTime : curTime;
+            curDate.put(cookName,temp);
+            res.put(shortDate,curDate);
+        }
+
+        return res;
+    }
+
     private Date getLocalDate(Date date)
     {
         Calendar calendar = Calendar.getInstance();
@@ -57,7 +93,6 @@ public class StatisticManager
         calendar.set(Calendar.MILLISECOND, 0);
         return calendar.getTime();
     }
-
 
     public void register(Cook cook)
     {
@@ -71,13 +106,13 @@ public class StatisticManager
 
     private class StatisticStorage
     {
-        private Map<EventType, List<EventDataRow>> storage = new LinkedHashMap<>();
+        private Map<EventType,List<EventDataRow>> storage = new LinkedHashMap<>();
 
         public StatisticStorage()
         {
-            for (EventType eventType : EventType.values())
+            for(EventType eventType : EventType.values())
             {
-                storage.put(eventType, new ArrayList<EventDataRow>());
+                storage.put(eventType,new ArrayList<EventDataRow>());
             }
         }
 

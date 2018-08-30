@@ -12,14 +12,15 @@ public class Restaurant
         Waiter waiter = new Waiter();
         cook.addObserver(waiter);
         tablet.addObserver(cook);
-        tablet.createOrder();
-        tablet.createOrder();
-        tablet.createOrder();
-        tablet.createOrder();
         DirectorTablet directorTablet = new DirectorTablet();
         directorTablet.printActiveVideoSet();
+        tablet.createOrder();
+        tablet.createOrder();
+        tablet.createOrder();
+        tablet.createOrder();
         directorTablet.printAdvertisementProfit();
-        directorTablet.printArchivedVideoSet();
         directorTablet.printCookWorkloading();
+        //directorTablet.printActiveVideoSet();
+        directorTablet.printArchivedVideoSet();
     }
 }
