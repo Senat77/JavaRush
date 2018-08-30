@@ -3,9 +3,7 @@ package com.javarush.task.task27.task2712;
 import com.javarush.task.task27.task2712.ad.AdvertisementManager;
 import com.javarush.task.task27.task2712.ad.NoVideoAvailableException;
 import com.javarush.task.task27.task2712.kitchen.Order;
-import com.javarush.task.task27.task2712.statistic.StatisticManager;
-import com.javarush.task.task27.task2712.statistic.event.CookedOrderEventDataRow;
-import javafx.beans.InvalidationListener;
+import com.javarush.task.task27.task2712.kitchen.TestOrder;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -45,6 +43,31 @@ public class Tablet extends java.util.Observable
             logger.log(Level.SEVERE,"Console is unavailable.");
         }
         return order;
+    }
+
+    public void createTestOrder()
+    {
+        TestOrder order = null;
+        try
+        {
+            order = new TestOrder(this);
+            if(!order.isEmpty())
+            {
+                ConsoleHelper.writeMessage(order.toString());
+
+                new AdvertisementManager(order.getTotalCookingTime() * 60).processVideos();
+                setChanged();
+                notifyObservers(order);
+            }
+        }
+        catch (NoVideoAvailableException nvae)
+        {
+            logger.log(Level.INFO,"No video is available for the order " + order);
+        }
+        catch (IOException e)
+        {
+            logger.log(Level.SEVERE,"Console is unavailable.");
+        }
     }
 
     @Override
