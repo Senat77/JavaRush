@@ -25,6 +25,11 @@ public class StatisticManager
         
     }
 
+    public Set<Cook> getCooks()
+    {
+        return cooks;
+    }
+
     // Данные по показу рекламы с группировкой по дням
     public Map<Date,Long> getVideoProfit()
     {
