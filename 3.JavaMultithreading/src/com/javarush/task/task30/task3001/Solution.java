@@ -1,10 +1,12 @@
 package com.javarush.task.task30.task3001;
 
-/* 
+import java.math.BigInteger;
+
+/*
 Конвертер систем счислений
 
-Реализуй логику метода convertNumberToOtherNumerationSystem, который должен переводить число number.getDigit(), из
-одной системы счисления (numerationSystem) в другую (expectedNumerationSystem).
+Реализуй логику метода convertNumberToOtherNumerationSystem, который должен переводить число number.getDigit(),
+из одной системы счисления (numerationSystem) в другую (expectedNumerationSystem).
 Брось NumberFormatException, если переданное число некорректно, например, число "120" с системой счисления 2.
 Валидация для - number.getDigit() - целое не отрицательное.
 Метод main не участвует в тестировании.
@@ -39,6 +41,30 @@ public class Solution
     public static Number convertNumberToOtherNumerationSystem(Number number, NumerationSystem expectedNumerationSystem)
     {
         //напишите тут ваш код
-        return null;
+        BigInteger num10 = new BigInteger(number.getDigit(), number.getNumerationSystem().getNumerationSystemIntValue());
+        String resNumber = num10.toString(expectedNumerationSystem.getNumerationSystemIntValue());
+        return new Number(expectedNumerationSystem, resNumber);
+        /*
+        Number res = null;
+
+        if(number.getNumerationSystem() == expectedNumerationSystem)
+            return new Number(expectedNumerationSystem,number.getDigit());
+
+        try
+        {
+            // Переводим систему счисления в int
+            int systemCount = Integer.parseInt(number.getNumerationSystem().toString().substring(1));
+            BigInteger bi = new BigInteger(String.valueOf(Integer.parseInt(number.getDigit(),systemCount)));
+            // Переводим число в новую систему
+            systemCount = Integer.parseInt(expectedNumerationSystem.toString().substring(1));
+            res = new Number(expectedNumerationSystem,bi.toString(systemCount));
+        }
+        catch (NumberFormatException e)
+        {
+            e.printStackTrace();
+        }
+
+        return res;
+        */
     }
 }
