@@ -2,6 +2,7 @@ package com.javarush.task.task32.task3211;
 
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
+import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -40,21 +41,8 @@ public class Solution
 
     public static boolean compareMD5(ByteArrayOutputStream byteArrayOutputStream, String md5) throws Exception
     {
-        MessageDigest md = null;
-        try
-        {
-            md = MessageDigest.getInstance("MD5");
-            md.update(byteArrayOutputStream.toByteArray());
-        }
-        catch (NoSuchAlgorithmException e)
-        {
-            e.printStackTrace();
-        }
-        if (md != null)
-        {
-            if(md.digest().toString().equals(md5))
-                return true;
-        }
-        return false;
+        MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+        BigInteger i = new BigInteger(1, messageDigest.digest(byteArrayOutputStream.toByteArray()));
+        return String.format("%032x", i).equals(md5);
     }
 }
