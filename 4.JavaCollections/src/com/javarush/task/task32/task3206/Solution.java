@@ -20,16 +20,14 @@ import java.lang.reflect.Proxy;
 3. Метод getProxy должен возвращать прокси для любого интерфейса, который наследуется от Item.
 4. В методе getProxy при вызове Proxy.newProxyInstance передай this.getClass().getClassLoader() в качестве первого
 аргумента.
-5. В методе getProxy при вызове Proxy.newProxyInstance передай вторым аргументом все интерфейсы, которые прокси должен
-реализовать.
+5. В методе getProxy при вызове Proxy.newProxyInstance передай вторым аргументом все интерфейсы, которые прокси
+должен реализовать.
 6. В методе getProxy при вызове Proxy.newProxyInstance передай new ItemInvocationHandler() как третий аргумент.
 7. Метод getProxy должен работать согласно с условием.
 */
-
 public class Solution {
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         Solution solution = new Solution();
         test(solution.getProxy(Item.class));                        //true false false
         test(solution.getProxy(Item.class, Small.class));           //true false true
@@ -39,8 +37,7 @@ public class Solution {
     }
 
 
-    private static void test(Object proxy)
-    {
+    private static void test(Object proxy) {
         boolean isItem = proxy instanceof Item;
         boolean isBig = proxy instanceof Big;
         boolean isSmall = proxy instanceof Small;
