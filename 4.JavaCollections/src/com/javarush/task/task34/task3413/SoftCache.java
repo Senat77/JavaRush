@@ -22,14 +22,24 @@ public class SoftCache {
         if(softReference == null)
             return null;
         else
-            return cacheMap.get(key).get();
+        {
+            AnyObject anyObject = softReference.get();
+            softReference.clear();
+            return anyObject;
+        }
     }
 
     public AnyObject remove(Long key) {
         SoftReference<AnyObject> softReference = cacheMap.remove(key);
 
         //напишите тут ваш код
-        if(softReference == null) return cacheMap.get(key).get();
-        return null;
+        if(softReference == null)
+            return null;
+        else
+        {
+            AnyObject anyObject = softReference.get();
+            softReference.clear();
+            return anyObject;
+        }
     }
 }
