@@ -2,7 +2,6 @@ package com.javarush.task.task35.task3513;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class Model {
@@ -14,6 +13,32 @@ public class Model {
 
     public Model() {
         resetGameTiles();
+    }
+
+    public Tile[][] getGameTiles() {
+        return gameTiles;
+    }
+
+    public boolean canMove() {
+        if(!getEmptyTiles().isEmpty()) return true;
+
+        for (int i = 0; i < FIELD_WIDTH; i++) {
+            for (int j = 0; j < FIELD_WIDTH - 1; j++) {
+                if (gameTiles[i][j].value == gameTiles[i][j + 1].value) {
+                    return true;
+                }
+            }
+        }
+
+        for (int j = 0; j < FIELD_WIDTH; j++) {
+            for (int i = 0; i < FIELD_WIDTH - 1; i++) {
+                if (gameTiles[i][j].value == gameTiles[i + 1][j].value) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     private List<Tile> getEmptyTiles() {
@@ -45,7 +70,8 @@ public class Model {
         maxTile = 0;
     }
 
-    private void compressTiles(Tile[] tiles) {
+    private boolean compressTiles(Tile[] tiles) {
+        boolean res = false;
         for (int i = 0; i < FIELD_WIDTH - 1; i++) {
             if(tiles[i].value == 0 && tiles[i+1].value != 0)
             {
@@ -53,11 +79,14 @@ public class Model {
                 tiles[i].value = tiles[i+1].value;
                 tiles[i+1].value = temp;
                 i = -1;
+                res = true;
             }
         }
+        return res;
     }
 
-    private void mergeTiles(Tile[] tiles) {
+    private boolean mergeTiles(Tile[] tiles) {
+        boolean res = false;
         for (int i = 0; i < FIELD_WIDTH - 1; i++) {
             if(tiles[i].value == 0) break;
             if(tiles[i].value == tiles[i+1].value) {
@@ -67,7 +96,51 @@ public class Model {
                 if(tiles[i].value > maxTile) maxTile = tiles[i].value;
                 compressTiles(tiles);
                 i = 0;
+                res = true;
             }
         }
+        return  res;
+    }
+
+    public void left() {
+        boolean ifEdit = false;
+        for (int i = 0; i < FIELD_WIDTH; i++) {
+            if(compressTiles(gameTiles[i]) || mergeTiles(gameTiles[i])) {
+                ifEdit = true;
+            }
+        }
+        if(ifEdit) addTile();
+    }
+
+    private void rotate (int count) {
+        for (int i = 0; i < count; i++) {
+            for (int k = 0; k < FIELD_WIDTH/2; k++) {
+                for (int j = k; j < FIELD_WIDTH - 1 - k; j++) {
+                    Tile tmp = gameTiles[k][j];
+                    gameTiles[k][j]  = gameTiles[j][FIELD_WIDTH-1-k];
+                    gameTiles[j][FIELD_WIDTH-1-k] = gameTiles[FIELD_WIDTH-1-k][FIELD_WIDTH-1-j];
+                    gameTiles[FIELD_WIDTH-1-k][FIELD_WIDTH-1-j] = gameTiles[FIELD_WIDTH-1-j][k];
+                    gameTiles[FIELD_WIDTH-1-j][k] = tmp;
+                }
+            }
+        }
+    }
+
+    public void up() {
+        rotate(1);
+        left();
+        rotate(3);
+    }
+
+    public void right() {
+        rotate(2);
+        left();
+        rotate(2);
+    }
+
+    public void down() {
+        rotate(3);
+        left();
+        rotate(1);
     }
 }
